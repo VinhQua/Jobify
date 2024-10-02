@@ -3,7 +3,7 @@ import { getUserFromLocalStorage } from "./localStorage";
 import { clearStore } from "../features/users/userSlice";
 
 const customFetch = axios.create({
-  baseURL: "https://jobify-prod.herokuapp.com/api/v1/toolkit",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 customFetch.interceptors.request.use((config) => {
