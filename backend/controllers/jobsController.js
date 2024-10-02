@@ -1,39 +1,57 @@
-import Job from '../models/Job.js';
-import { StatusCodes } from 'http-status-codes';
+import Job from "../models/Job.js";
+import { StatusCodes } from "http-status-codes";
 import {
   BadRequestError,
   NotFoundError,
   UnAuthenticatedError,
-} from '../errors/index.js';
-import checkPermissions from '../utils/checkPermissions.js';
-import mongoose from 'mongoose';
-import moment from 'moment';
+} from "../errors/index.js";
+import checkPermissions from "../utils/checkPermissions.js";
+import mongoose from "mongoose";
+import moment from "moment";
 const createJob = async (req, res) => {
-  const { position, company } = req.body;
+  const {
+    companyId,
+    description,
+    jobType,
+    jobSalary,
+    pdf,
+    jobLocation,
+    jobPosition,
+  } = req.body;
 
-  if (!position || !company) {
-    throw new BadRequestError('Please provide all values');
+  if (
+    !jobPosition ||
+    !companyId ||
+    !description ||
+    !jobType ||
+    !jobSalary ||
+    !jobLocation
+  ) {
+    throw new BadRequestError("Please provide all values");
   }
   req.body.createdBy = req.user.userId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
 const getAllJobs = async (req, res) => {
-  const { status, jobType, sort, search } = req.query;
+  const { companyId, jobSalary, jobType, sort, search } = req.query;
 
   const queryObject = {
     createdBy: req.user.userId,
   };
   // add stuff based on condition
 
-  if (status && status !== 'all') {
-    queryObject.status = status;
+  if (companyId && companyId !== "all") {
+    queryObject.companyId = companyId;
   }
-  if (jobType && jobType !== 'all') {
+  if (jobType && jobType !== "all") {
     queryObject.jobType = jobType;
   }
+  if (jobSalary) {
+    queryObject.jobSalary = { $lte: jobSalary };
+  }
   if (search) {
-    queryObject.position = { $regex: search, $options: 'i' };
+    queryObject.jobPosition = { $regex: search, $options: "i" };
   }
   // NO AWAIT
 
@@ -41,17 +59,17 @@ const getAllJobs = async (req, res) => {
 
   // chain sort conditions
 
-  if (sort === 'latest') {
-    result = result.sort('-createdAt');
+  if (sort === "latest") {
+    result = result.sort("-createdAt");
   }
-  if (sort === 'oldest') {
-    result = result.sort('createdAt');
+  if (sort === "oldest") {
+    result = result.sort("createdAt");
   }
-  if (sort === 'a-z') {
-    result = result.sort('position');
+  if (sort === "a-z") {
+    result = result.sort("position");
   }
-  if (sort === 'z-a') {
-    result = result.sort('-position');
+  if (sort === "z-a") {
+    result = result.sort("-position");
   }
 
   //
@@ -72,10 +90,25 @@ const getAllJobs = async (req, res) => {
 };
 const updateJob = async (req, res) => {
   const { id: jobId } = req.params;
-  const { company, position } = req.body;
+  const {
+    companyId,
+    description,
+    jobType,
+    jobSalary,
+    pdf,
+    jobLocation,
+    jobPosition,
+  } = req.body;
 
-  if (!position || !company) {
-    throw new BadRequestError('Please provide all values');
+  if (
+    !jobPosition ||
+    !companyId ||
+    !description ||
+    !jobType ||
+    !jobSalary ||
+    !jobLocation
+  ) {
+    throw new BadRequestError("Please provide all values");
   }
   const job = await Job.findOne({ _id: jobId });
 
@@ -106,12 +139,12 @@ const deleteJob = async (req, res) => {
 
   await job.remove();
 
-  res.status(StatusCodes.OK).json({ msg: 'Success! Job removed' });
+  res.status(StatusCodes.OK).json({ msg: "Success! Job removed" });
 };
 const showStats = async (req, res) => {
   let stats = await Job.aggregate([
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
-    { $group: { _id: '$status', count: { $sum: 1 } } },
+    { $group: { _id: "$status", count: { $sum: 1 } } },
   ]);
   stats = stats.reduce((acc, curr) => {
     const { _id: title, count } = curr;
@@ -129,11 +162,11 @@ const showStats = async (req, res) => {
     { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
     {
       $group: {
-        _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } },
+        _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
         count: { $sum: 1 },
       },
     },
-    { $sort: { '_id.year': -1, '_id.month': -1 } },
+    { $sort: { "_id.year": -1, "_id.month": -1 } },
     { $limit: 6 },
   ]);
   monthlyApplications = monthlyApplications
@@ -145,7 +178,7 @@ const showStats = async (req, res) => {
       const date = moment()
         .month(month - 1)
         .year(year)
-        .format('MMM Y');
+        .format("MMM Y");
       return { date, count };
     })
     .reverse();

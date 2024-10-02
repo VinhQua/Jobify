@@ -1,39 +1,42 @@
-import mongoose from 'mongoose'
+import { Binary, BSONType } from "mongodb";
+import mongoose from "mongoose";
 
 const JobSchema = new mongoose.Schema(
   {
-    company: {
+    description: {
       type: String,
-      required: [true, 'Please provide company'],
-      maxlength: 50,
-    },
-    position: {
-      type: String,
-      required: [true, 'Please provide position'],
-      maxlength: 100,
-    },
-    status: {
-      type: String,
-      enum: ['interview', 'declined', 'pending'],
-      default: 'pending',
+      required: [true, "Please provide description"],
     },
     jobType: {
       type: String,
-      enum: ['full-time', 'part-time', 'remote', 'internship'],
-      default: 'full-time',
+      enum: ["full-time", "part-time", "remote", "internship"],
+      default: "full-time",
+    },
+    jobSalary: {
+      type: Number,
+      required: [true, "Please provide salary"],
+    },
+    pdf: {
+      data: Buffer,
+      contentType: String,
     },
     jobLocation: {
       type: String,
-      default: 'my city',
+      default: "my city",
       required: true,
     },
-    createdBy: {
+    jobPosition: {
+      type: String,
+      default: "my city",
+      required: true,
+    },
+    company: {
       type: mongoose.Types.ObjectId,
-      ref: 'User',
-      required: [true, 'Please provide user'],
+      ref: "Company",
+      required: [true, "Please provide company"],
     },
   },
   { timestamps: true }
-)
+);
 
-export default mongoose.model('Job', JobSchema)
+export default mongoose.model("Job", JobSchema);
