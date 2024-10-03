@@ -20,7 +20,6 @@ const Register = () => {
     const newValues = { ...values, [e.target.name]: e.target.value };
     setValues(newValues);
   };
-  console.log(user);
   const onSubmit = (e) => {
     e.preventDefault();
     // console.log(e.target);

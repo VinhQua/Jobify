@@ -2,6 +2,8 @@ import AreaChart from "./AreaChart";
 import BarChart from "./BarChart";
 import { BigSideBar } from "./BigSideBar";
 import ChartsContainer from "./ChartsContainer";
+import CompaniesContainer from "./CompaniesContainer";
+import CompanyImage from "./CompanyImage";
 import FileInput from "./FileInput";
 import FormRange from "./FormRange";
 import FormRow from "./FormRow";
@@ -19,6 +21,8 @@ import StatsItem from "./StatsItem";
 import TextInput from "./TextInput";
 
 export {
+  CompanyImage,
+  CompaniesContainer,
   FileInput,
   TextInput,
   PriceInput,

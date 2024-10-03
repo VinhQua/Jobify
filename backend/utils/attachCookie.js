@@ -1,10 +1,13 @@
 const attachCookie = ({ res, token }) => {
   const oneDay = 1000 * 60 * 60 * 24;
 
-  res.cookie('token', token, {
+  res.cookie("token", token, {
+    signed: true,
     httpOnly: true,
     expires: new Date(Date.now() + oneDay),
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
+    // secure: process.env.NODE_ENV === "production",
+    sameSite: "none",
   });
 };
 

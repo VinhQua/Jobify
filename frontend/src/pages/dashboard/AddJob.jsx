@@ -17,13 +17,6 @@ import {
 import { getAIResponse } from "../../utils/openaiService";
 
 const AddJob = () => {
-  const { user } = useSelector((store) => store.user);
-  // add default location
-  useEffect(() => {
-    if (!isEditing) {
-      dispatch(handleJobInput({ name: "jobLocation", value: user.location }));
-    }
-  }, []);
   const dispatch = useDispatch();
   const {
     editJobId,

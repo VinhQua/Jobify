@@ -17,8 +17,7 @@ const JobSchema = new mongoose.Schema(
       required: [true, "Please provide salary"],
     },
     pdf: {
-      data: Buffer,
-      contentType: String,
+      type: String,
     },
     jobLocation: {
       type: String,

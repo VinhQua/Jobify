@@ -49,18 +49,20 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state, action) => {
+      .addCase(registerUser.pending, (state, { payload }) => {
         state.isLoading = true;
       })
       .addCase(registerUser.fulfilled, (state, { payload }) => {
-        const { user } = payload;
+        // const { user } = payload;
         state.isLoading = false;
-        state.user = user;
-        addUserToLocalStorage(user);
-        toast.success(`Hello There ${user.name}`);
+        state.user = payload?.user;
+        addUserToLocalStorage(payload?.user);
+        toast.success(`Hello There ${payload?.user.name}`);
       })
       .addCase(registerUser.rejected, (state, { payload }) => {
         state.isLoading = false;
+        // console.log(payload);
+
         toast.error(payload);
       })
       .addCase(loginUser.pending, (state, action) => {
@@ -81,11 +83,11 @@ const userSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateUser.fulfilled, (state, { payload }) => {
-        console.log(payload.user);
+        const { user } = payload;
         state.isLoading = false;
-        state.user = payload.user;
+        state.user = user;
         toast.success("User Updated");
-        addUserToLocalStorage(payload.user);
+        addUserToLocalStorage(user);
       })
       .addCase(updateUser.rejected, (state, { payload }) => {
         state.isLoading = false;

@@ -8,8 +8,8 @@ const CompanySchema = new mongoose.Schema(
       maxlength: 50,
     },
     logo: {
-      data: Buffer,
-      contentType: String,
+      type: String,
+      required: [true, "Please provide logo"],
     },
     createdBy: {
       type: mongoose.Types.ObjectId,

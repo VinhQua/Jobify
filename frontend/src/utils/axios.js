@@ -1,21 +1,9 @@
 import axios from "axios";
-import { getUserFromLocalStorage } from "./localStorage";
 import { clearStore } from "../features/users/userSlice";
 
 const customFetch = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-});
-
-customFetch.interceptors.request.use((config) => {
-  try {
-    const user = getUserFromLocalStorage() || null;
-    if (user) {
-      config.headers["Authorization"] = `Bearer ${user.token}`;
-    }
-    return config;
-  } catch (error) {
-    return Promise.reject(error);
-  }
+  withCredentials: true,
 });
 
 export const checkForUnauthorizedResponse = (error, thunkAPI) => {
