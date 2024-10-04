@@ -31,16 +31,11 @@ if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
 }
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// only when ready to deploy
-app.use(express.static(path.resolve(__dirname, "./client/build")));
-
 app.use(express.json());
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://jobifiez.netlify.app"],
-    preflightContinue: true,
+    methods: "GET,POST,PUT,DELETE,PATCH",
     credentials: true,
     allowedHeaders: [
       "Origin",
@@ -49,8 +44,10 @@ app.use(
       "Accept",
       "X-Access-Token",
     ],
+    preflightContinue: true,
   })
 );
+
 app.use(helmet());
 app.use(xss());
 app.use(mongoSanitize());
