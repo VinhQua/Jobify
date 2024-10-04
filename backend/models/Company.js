@@ -6,6 +6,7 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide company"],
       maxlength: 50,
+      unique: true,
     },
     logo: {
       type: String,

@@ -41,10 +41,12 @@ app.use(
       "Origin",
       "X-Requested-With",
       "Content-Type",
+      "Authorization",
       "Accept",
       "X-Access-Token",
     ],
-    preflightContinue: true,
+
+    // preflightContinue: true,
   })
 );
 

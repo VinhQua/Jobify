@@ -20,7 +20,7 @@ const AddCompany = () => {
       console.log("All Fields Required");
     }
     if (!isEditing) {
-      return dispatch(createCompany({}));
+      return dispatch(createCompany({ name, logo }));
     }
     let company = { name, logo };
     return dispatch(editCompany({ companyId: editCompanyId, company }));

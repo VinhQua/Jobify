@@ -60,6 +60,9 @@ const allJobsSlice = createSlice({
         state.jobs = payload.jobs;
         state.numOfPages = payload.numOfPages;
         state.totalJobs = payload.totalJobs;
+        console.log(payload);
+
+        state.companyList = payload.companyList;
       })
       .addCase(getAllJobs.rejected, (state, { payload }) => {
         state.isLoading = false;

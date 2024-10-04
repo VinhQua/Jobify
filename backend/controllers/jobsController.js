@@ -8,9 +8,10 @@ import {
 import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
 import moment from "moment";
+import Company from "../models/Company.js";
 const createJob = async (req, res) => {
   const {
-    companyId,
+    company,
     description,
     jobType,
     jobSalary,
@@ -21,7 +22,7 @@ const createJob = async (req, res) => {
 
   if (
     !jobPosition ||
-    !companyId ||
+    !company ||
     !description ||
     !jobType ||
     !jobSalary ||
@@ -29,19 +30,24 @@ const createJob = async (req, res) => {
   ) {
     throw new BadRequestError("Please provide all values");
   }
+  const companies = await Company.find();
+  const companyId = companies.filter((item) => item.name === company)[0]._id;
   req.body.createdBy = req.user.userId;
+  req.body.company = companyId;
   const job = await Job.create(req.body);
   res.status(StatusCodes.CREATED).json({ job });
 };
 const getAllJobs = async (req, res) => {
-  const { companyId, jobSalary, jobType, sort, search } = req.query;
+  const { company, jobSalary, jobType, sort, search } = req.query;
 
   const queryObject = {
     createdBy: req.user.userId,
   };
   // add stuff based on condition
+  const companies = await Company.find();
 
-  if (companyId && companyId !== "all") {
+  if (company && company !== "all") {
+    const companyId = companies.filter((item) => item.name === company)[0]._id;
     queryObject.companyId = companyId;
   }
   if (jobType && jobType !== "all") {
@@ -81,12 +87,13 @@ const getAllJobs = async (req, res) => {
 
   result = result.skip(skip).limit(limit);
 
-  const jobs = await result;
+  let jobs = await result.populate("company");
 
   const totalJobs = await Job.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalJobs / limit);
 
-  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages });
+  const companyList = companies.map((company) => company.name);
+  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages, companyList });
 };
 const updateJob = async (req, res) => {
   const { id: jobId } = req.params;

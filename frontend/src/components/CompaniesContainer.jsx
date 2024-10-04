@@ -26,7 +26,7 @@ const CompaniesContainer = () => {
   return (
     <Wrapper>
       <h5>
-        {totalCompanies} job{totalCompanies > 1 ? "s" : ""} found
+        {totalCompanies} compan{totalCompanies > 1 ? "ies" : "y"} found
       </h5>
       <div className="jobs">
         {companies.map((company) => {

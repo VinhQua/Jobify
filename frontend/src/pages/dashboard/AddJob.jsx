@@ -30,18 +30,36 @@ const AddJob = () => {
     jobType,
     jobTypeOptions,
     jobPosition,
+    file,
   } = useSelector((store) => store.job);
+  const { companyList } = useSelector((store) => store.allJobs);
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!position || !company || !jobLocation) {
+    if (!jobPosition || !company || !jobLocation) {
       console.log("All Fields Required");
     }
     if (!isEditing) {
       return dispatch(
-        createJob({ position, company, jobLocation, jobType, status })
+        createJob({
+          jobPosition,
+          company: company,
+          jobLocation,
+          jobType,
+          description: jobDescription,
+          pdf: file,
+          jobSalary,
+        })
       );
     }
-    let job = { position, company, jobLocation, jobType, status };
+    let job = {
+      jobPosition,
+      company: company,
+      jobLocation,
+      jobType,
+      description: jobDescription,
+      pdf: file,
+      jobSalary,
+    };
     return dispatch(editJob({ jobId: editJobId, job }));
   };
   const handleChange = (e) => {
@@ -50,7 +68,7 @@ const AddJob = () => {
     dispatch(handleJobInput({ name, value }));
   };
   const handleGenerateDescription = async () => {
-    const input = `generate job description for ${jobType} ${jobPosition} at a company called ${company} with a salary of $${jobSalary}`;
+    const input = `generate job description for ${jobType} ${jobPosition} at a company named ${company} with a salary of $${jobSalary} location: ${jobLocation}`;
     const aiResponse = await getAIResponse(input);
 
     dispatch(
@@ -68,9 +86,10 @@ const AddJob = () => {
 
         <div className="form-center">
           {/* company */}
-          <FormRow
+          <FormSelect
             name="company"
             value={company}
+            list={companyList}
             type="text"
             handleChange={handleChange}
           />

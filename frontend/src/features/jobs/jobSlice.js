@@ -8,18 +8,16 @@ import { createJobThunk, deleteJobThunk, editJobThunk } from "./jobThunk";
 
 const initialState = {
   isLoading: false,
-  position: "",
-  company: "",
+  company: "Black",
   jobLocation: "",
   jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
   jobType: "full-time",
-  statusOptions: ["interview", "declined", "pending"],
-  status: "pending",
   isEditing: false,
   editJobId: "",
-  jobSalary: 1000,
+  jobSalary: 100000,
   jobDescription: "",
   jobPosition: "",
+  file: "",
 };
 export const createJob = createAsyncThunk("job/createJob", createJobThunk);
 export const deleteJob = createAsyncThunk("job/deleteJob", deleteJobThunk);
