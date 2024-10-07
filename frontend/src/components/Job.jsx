@@ -18,7 +18,7 @@ const Job = ({
   jobSalary,
   description,
   jobPosition,
-  pdf: file,
+  pdf,
 }) => {
   const date = moment(createdAt).format("MMM Do YYYY");
   const dispatch = useDispatch();
@@ -56,9 +56,9 @@ const Job = ({
                     jobType,
                     createdAt,
                     jobSalary,
-                    description,
+                    jobDescription: description,
                     jobPosition,
-                    pdf: file,
+                    file: pdf,
                   })
                 )
               }

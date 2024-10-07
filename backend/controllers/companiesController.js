@@ -1,4 +1,6 @@
 import { StatusCodes } from "http-status-codes";
+import { uploadFileToGoogleCloud } from "../utils/google-cloud.js";
+import { format } from "util";
 import {
   BadRequestError,
   NotFoundError,
@@ -8,6 +10,7 @@ import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
 import moment from "moment";
 import Company from "../models/Company.js";
+
 const createCompany = async (req, res) => {
   const { logo, name } = req.body;
 
@@ -106,5 +109,13 @@ const deleteCompany = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ msg: "Success! Company removed" });
 };
-
-export { createCompany, deleteCompany, getAllCompanies, updateCompany };
+const uploadLogo = async (req, res) => {
+  uploadFileToGoogleCloud(req, res);
+};
+export {
+  createCompany,
+  deleteCompany,
+  getAllCompanies,
+  updateCompany,
+  uploadLogo,
+};

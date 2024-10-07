@@ -21,9 +21,9 @@ const CompanyImage = () => {
     try {
       setIsLoading(true);
       const form = new FormData();
-      form.append("image", image);
-      const { data } = await customFetch.post("/products/uploadImage", form);
-      dispatch(handleCompanyInput({ name: "logo", value: data.uploadedLink }));
+      form.append("file", image);
+      const { data } = await customFetch.post("companies/uploadLogo", form);
+      dispatch(handleCompanyInput({ name: "logo", value: data.url }));
 
       setIsLoading(false);
     } catch (error) {

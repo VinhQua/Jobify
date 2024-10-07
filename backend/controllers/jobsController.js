@@ -98,7 +98,7 @@ const getAllJobs = async (req, res) => {
 const updateJob = async (req, res) => {
   const { id: jobId } = req.params;
   const {
-    companyId,
+    company,
     description,
     jobType,
     jobSalary,
@@ -109,7 +109,7 @@ const updateJob = async (req, res) => {
 
   if (
     !jobPosition ||
-    !companyId ||
+    !company ||
     !description ||
     !jobType ||
     !jobSalary ||
@@ -122,9 +122,6 @@ const updateJob = async (req, res) => {
   if (!job) {
     throw new NotFoundError(`No job with id :${jobId}`);
   }
-  // check permissions
-
-  checkPermissions(req.user, job.createdBy);
 
   const updatedJob = await Job.findOneAndUpdate({ _id: jobId }, req.body, {
     new: true,
@@ -141,8 +138,6 @@ const deleteJob = async (req, res) => {
   if (!job) {
     throw new NotFoundError(`No job with id :${jobId}`);
   }
-
-  checkPermissions(req.user, job.createdBy);
 
   await job.remove();
 

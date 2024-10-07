@@ -26,6 +26,7 @@ import companiesRouter from "./routes/companiesRoute.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
 import authenticateUser from "./middleware/auth.js";
+import mongoose from "mongoose";
 
 if (process.env.NODE_ENV !== "production") {
   app.use(morgan("dev"));
@@ -71,7 +72,9 @@ const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
+    // connect to DB
     await connectDB(process.env.MONGO_URL);
+
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
     });
