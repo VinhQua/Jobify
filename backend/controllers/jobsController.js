@@ -9,6 +9,7 @@ import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
 import moment from "moment";
 import Company from "../models/Company.js";
+import { uploadFileToGoogleCloud } from "../utils/google-cloud.js";
 const createJob = async (req, res) => {
   const {
     company,
@@ -48,7 +49,7 @@ const getAllJobs = async (req, res) => {
 
   if (company && company !== "all") {
     const companyId = companies.filter((item) => item.name === company)[0]._id;
-    queryObject.companyId = companyId;
+    queryObject.company = companyId;
   }
   if (jobType && jobType !== "all") {
     queryObject.jobType = jobType;
@@ -187,5 +188,7 @@ const showStats = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
-
-export { createJob, deleteJob, getAllJobs, updateJob, showStats };
+const uploadFile = async (req, res) => {
+  uploadFileToGoogleCloud(req, res);
+};
+export { createJob, deleteJob, getAllJobs, updateJob, showStats, uploadFile };

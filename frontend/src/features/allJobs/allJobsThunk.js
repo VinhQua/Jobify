@@ -1,9 +1,9 @@
 import customFetch, { checkForUnauthorizedResponse } from "../../utils/axios";
 
 export const getAllJobsThunk = async (_, thunkAPI) => {
-  const { search, searchType, sort, page, searchCompany } =
+  const { search, searchType, sort, page, searchCompany, salary } =
     thunkAPI.getState().allJobs;
-  let url = `jobs?jobType=${searchType}&sort=${sort}&page=${page}&company=${searchCompany}`;
+  let url = `jobs?jobType=${searchType}&sort=${sort}&page=${page}&company=${searchCompany}&jobSalary=${salary}`;
   if (search) {
     url += `&search=${search}`;
   }

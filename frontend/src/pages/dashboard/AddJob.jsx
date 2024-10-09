@@ -83,7 +83,6 @@ const AddJob = () => {
     <Wrapper>
       <div className="form">
         <h3>{isEditing ? "edit job" : "add job"}</h3>
-
         <div className="form-center">
           {/* company */}
           <FormSelect
@@ -125,9 +124,9 @@ const AddJob = () => {
             handleChange={handleChange}
             labelText="job type"
           />
-          {/* Job File */}
-          <FileInput labelText="Job File" />
         </div>
+        {/* Job File */}
+        <FileInput labelText="Job File" />
         {/* job description */}
         <div className="form">
           <TextInput

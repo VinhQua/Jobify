@@ -8,7 +8,7 @@ const initialFiltersState = {
   search: "",
   searchCompany: "all",
   companyList: [],
-  salary: 0,
+  salary: 1000000,
   searchType: "all",
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
