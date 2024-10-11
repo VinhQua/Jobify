@@ -21,11 +21,12 @@ import connectDB from "./db/connect.js";
 import authRouter from "./routes/authRoutes.js";
 import jobsRouter from "./routes/jobsRoutes.js";
 import companiesRouter from "./routes/companiesRoute.js";
+import usersRouter from "./routes/userRoute.js";
 
 // middleware
 import notFoundMiddleware from "./middleware/not-found.js";
 import errorHandlerMiddleware from "./middleware/error-handler.js";
-import authenticateUser from "./middleware/auth.js";
+import { auth, authorizePermission } from "./middleware/auth.js";
 import mongoose from "mongoose";
 
 if (process.env.NODE_ENV !== "production") {
@@ -57,8 +58,9 @@ app.use(mongoSanitize());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", authenticateUser, jobsRouter);
-app.use("/api/v1/companies", authenticateUser, companiesRouter);
+app.use("/api/v1/jobs", auth, jobsRouter);
+app.use("/api/v1/companies", auth, companiesRouter);
+app.use("/api/v1/users", auth, authorizePermission("super-admin"), usersRouter);
 
 // only when ready to deploy
 app.get("*", (req, res) => {
