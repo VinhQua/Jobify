@@ -1,5 +1,27 @@
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
+import NotFoundError from "../errors/not-found.js";
+import BadRequestError from "../errors/bad-request.js";
+const registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    throw new BadRequestError("please provide all values");
+  }
+  const userAlreadyExists = await User.findOne({ email });
+  if (userAlreadyExists) {
+    throw new BadRequestError("Email already in use");
+  }
+  const user = await User.create({ name, email, password });
+
+  res.status(StatusCodes.CREATED).json({
+    user: {
+      email: user.email,
+      name: user.name,
+    },
+    msg: "Success! User Created",
+  });
+};
 const getAllUsers = async (req, res) => {
   const queryObject = {
     role: "admin",
@@ -8,51 +30,36 @@ const getAllUsers = async (req, res) => {
 
   res.status(StatusCodes.OK).json({ users });
 };
-const getSingleUser = async (req, res) => {
-  const { id } = req.params;
-  const user = await User.findOne({ where: { id } });
-  if (!user) {
-    throw new NotFound(`no user with id ${id}`);
-  }
-  res.status(StatusCodes.OK).json({ user });
-};
-const showCurrentUser = async (req, res) => {
-  const user = await User.findOne({ where: { email: req.user.email } });
-  return res.status(StatusCodes.OK).json({
-    user: {
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      image: user.image,
-      contact: user.contact,
-      address: user.address,
-    },
-  });
-};
+
 const updateUser = async (req, res) => {
-  const id = req.user.userId;
-  const { password, name, email, address, contact, image } = req.body;
-  const updatedUser = { name, email, address, contact, image };
-  if (password) {
-    updatedUser.password = await hashPassword(password);
+  const { id: userId } = req.params;
+  const { email, name } = req.body;
+
+  if (!email || !name) {
+    throw new BadRequestError("Please provide all values");
   }
-  const user = await User.update({ ...updatedUser }, { where: { id } });
+  const user = await User.findOne({ _id: userId });
   if (!user) {
-    throw new NotFound(`no user with id ${id}`);
+    throw new NotFoundError(`No user with id :${userId}`);
   }
-  res.status(StatusCodes.OK).json({ msg: "Success! User updated" });
+  user.email = email;
+  user.name = name;
+
+  await user.save();
+
+  res.status(StatusCodes.OK).json({ user, msg: "Success! User Updated" });
 };
 const deleteUser = async (req, res) => {
-  const id = req.user.userId;
-  const { password, name, email, address, contact, image } = req.body;
-  const updatedUser = { name, email, address, contact, image };
-  if (password) {
-    updatedUser.password = await hashPassword(password);
-  }
-  const user = await User.update({ ...updatedUser }, { where: { id } });
+  const { id: userId } = req.params;
+
+  const user = await User.findOne({ _id: userId });
+
   if (!user) {
-    throw new NotFound(`no user with id ${id}`);
+    throw new NotFoundError(`No user with id :${userId}`);
   }
-  res.status(StatusCodes.OK).json({ msg: "Success! User updated" });
+
+  await user.remove();
+
+  res.status(StatusCodes.OK).json({ msg: "Success! User removed" });
 };
-export { getAllUsers, getSingleUser, showCurrentUser, updateUser, deleteUser };
+export { getAllUsers, updateUser, deleteUser, registerUser };

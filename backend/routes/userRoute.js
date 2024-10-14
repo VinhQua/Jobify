@@ -4,11 +4,11 @@ const router = express.Router();
 import {
   deleteUser,
   getAllUsers,
+  registerUser,
   updateUser,
 } from "../controllers/userController.js";
-import { register } from "../controllers/authController.js";
 
-router.route("/").post(register).get(getAllUsers);
+router.route("/").post(registerUser).get(getAllUsers);
 
 // remember about :id
 
