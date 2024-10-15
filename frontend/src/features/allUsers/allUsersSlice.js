@@ -2,33 +2,18 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import customFetch from "../../utils/axios";
 import { logoutUser } from "../users/userSlice";
 import { toast } from "react-toastify";
-import { getAllJobsThunk, showStatsThunk } from "./allJobsThunk";
-
-const initialFiltersState = {
-  search: "",
-  searchCompany: "all",
-  companyList: [],
-  salary: 0,
-  searchType: "all",
-  sort: "latest",
-  sortOptions: ["latest", "oldest", "a-z", "z-a"],
-};
 
 const initialState = {
   isLoading: true,
-  jobs: [],
-  totalJobs: 0,
+  admins: [],
+  totalAdmins: 0,
   numOfPages: 1,
   page: 1,
-  stats: {},
-  monthlyApplications: [],
-  ...initialFiltersState,
 };
 
-export const getAllJobs = createAsyncThunk("allJobs/getJobs", getAllJobsThunk);
-export const showStats = createAsyncThunk("allJobs/showStats", showStatsThunk);
-const allJobsSlice = createSlice({
-  name: "allJobs",
+export const getAllAdmins = createAsyncThunk("allAdmins/getAdmins");
+const allAdminsSlice = createSlice({
+  name: "allAdmins",
   initialState,
   reducers: {
     showLoading: (state) => {
@@ -37,43 +22,28 @@ const allJobsSlice = createSlice({
     hideLoading: (state) => {
       state.isLoading = false;
     },
-    handleFiltersInput: (state, { payload }) => {
+    handleAdminFiltersInput: (state, { payload }) => {
       const { name, value } = payload;
 
       return { ...state, page: 1, [name]: value };
     },
-    clearJobFilters: (state) => {
-      return { ...state, ...initialFiltersState };
-    },
     changePage: (state, { payload }) => {
       state.page = payload;
     },
-    clearAllJobState: () => initialState,
+    clearAllAdminState: () => initialState,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllJobs.pending, (state, { payload }) => {
+      .addCase(getAllAdmins.pending, (state, { payload }) => {
         state.isLoading = true;
       })
-      .addCase(getAllJobs.fulfilled, (state, { payload }) => {
+      .addCase(getAllAdmins.fulfilled, (state, { payload }) => {
         state.isLoading = false;
-        state.jobs = payload.jobs;
+        state.admins = payload.admins;
         state.numOfPages = payload.numOfPages;
-        state.totalJobs = payload.totalJobs;
+        state.totalAdmins = payload.totalAdmins;
       })
-      .addCase(getAllJobs.rejected, (state, { payload }) => {
-        state.isLoading = false;
-        toast.error(payload);
-      })
-      .addCase(showStats.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(showStats.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.stats = payload.defaultStats;
-        state.monthlyApplications = payload.monthlyApplications;
-      })
-      .addCase(showStats.rejected, (state, { payload }) => {
+      .addCase(getAllAdmins.rejected, (state, { payload }) => {
         state.isLoading = false;
         toast.error(payload);
       });
@@ -86,5 +56,5 @@ export const {
   handleFiltersInput,
   clearJobFilters,
   clearAllJobState,
-} = allJobsSlice.actions;
-export default allJobsSlice.reducer;
+} = allAdminsSlice.actions;
+export default allAdminsSlice.reducer;

@@ -1,3 +1,4 @@
+import AdminsContainer from "./AdminsContainer";
 import AreaChart from "./AreaChart";
 import BarChart from "./BarChart";
 import { BigSideBar } from "./BigSideBar";
@@ -21,6 +22,7 @@ import StatsItem from "./StatsItem";
 import TextInput from "./TextInput";
 
 export {
+  AdminsContainer,
   CompanyImage,
   CompaniesContainer,
   FileInput,

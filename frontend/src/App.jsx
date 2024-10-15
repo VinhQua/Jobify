@@ -7,6 +7,7 @@ import {
   AddJob,
   AllCompanies,
   AllJobs,
+  AllUsers,
   Profile,
   SharedLayout,
 } from "./pages/dashboard";
@@ -27,6 +28,7 @@ function App() {
           <Route path="add-job" element={<AddJob />} />
           <Route path="all-companies" element={<AllCompanies />} />
           <Route path="add-company" element={<AddCompany />} />
+          <Route path="all-admins" element={<AllUsers />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="landing" element={<Landing />} />
