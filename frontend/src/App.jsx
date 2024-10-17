@@ -3,6 +3,7 @@ import { Error, Landing, ProtectedRoute, Register } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
+  AddAdmin,
   AddCompany,
   AddJob,
   AllCompanies,
@@ -29,6 +30,7 @@ function App() {
           <Route path="all-companies" element={<AllCompanies />} />
           <Route path="add-company" element={<AddCompany />} />
           <Route path="all-admins" element={<AllUsers />} />
+          <Route path="add-admin" element={<AddAdmin />} />
           <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="landing" element={<Landing />} />

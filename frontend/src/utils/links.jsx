@@ -31,6 +31,5 @@ const links = [
     path: "add-admin",
     icon: <FaUser />,
   },
-  { id: 7, text: "profile", path: "profile", icon: <ImProfile /> },
 ];
 export default links;

@@ -5,6 +5,7 @@ import allJobsSlice from "./features/allJobs/allJobsSlice";
 import companySlice from "./features/companies/companySlice";
 import allCompaniesSlice from "./features/allCompanies/allCompaniesSlice";
 import allAdminsSlice from "./features/allUsers/allUsersSlice";
+import adminSlice from "./features/admin/adminSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
@@ -13,5 +14,6 @@ export const store = configureStore({
     company: companySlice,
     allCompanies: allCompaniesSlice,
     allAdmins: allAdminsSlice,
+    admin: adminSlice,
   },
 });

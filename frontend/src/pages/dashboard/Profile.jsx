@@ -38,23 +38,10 @@ const Profile = () => {
             value={name}
           />
           <FormRow
-            type="text"
-            name="lastName"
-            labelText="Last Name"
-            handleChange={handleChange}
-            value={lastName}
-          />
-          <FormRow
             type="email"
             name="email"
             handleChange={handleChange}
             value={email}
-          />
-          <FormRow
-            type="text"
-            name="location"
-            handleChange={handleChange}
-            value={location}
           />
           <button type="submit" className="btn btn-block" disabled={isLoading}>
             {isLoading ? "Loading..." : "Save"}

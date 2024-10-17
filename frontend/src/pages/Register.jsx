@@ -7,8 +7,8 @@ import { loginUser, registerUser } from "../features/users/userSlice";
 import { useNavigate } from "react-router-dom";
 const initialState = {
   name: "",
-  email: "",
-  password: "",
+  email: "superadmin@gmail.com",
+  password: "123456",
   isMember: true,
 };
 const Register = () => {

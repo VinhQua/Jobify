@@ -6,8 +6,9 @@ import AllUsers from "./AllUsers";
 import Profile from "./Profile";
 import SharedLayout from "./SharedLayout";
 import Stats from "./Stats";
-
+import AddAdmin from "./AddAdmin";
 export {
+  AddAdmin,
   AllUsers,
   AddCompany,
   AllCompanies,

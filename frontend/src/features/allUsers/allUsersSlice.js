@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import customFetch from "../../utils/axios";
-import { logoutUser } from "../users/userSlice";
+
 import { toast } from "react-toastify";
+import { getAllUsersThunk } from "./allUsersThunk";
 
 const initialState = {
   isLoading: true,
@@ -11,7 +11,10 @@ const initialState = {
   page: 1,
 };
 
-export const getAllAdmins = createAsyncThunk("allAdmins/getAdmins");
+export const getAllAdmins = createAsyncThunk(
+  "allAdmins/getAdmins",
+  getAllUsersThunk
+);
 const allAdminsSlice = createSlice({
   name: "allAdmins",
   initialState,

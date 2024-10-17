@@ -32,7 +32,6 @@ const NavBar = () => {
             {user?.name}
             <FaCaretDown />
           </button>
-
           <div className={showDropdown ? "dropdown show-dropdown" : "dropdown"}>
             <button
               type="button"
