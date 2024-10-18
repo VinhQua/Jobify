@@ -6,7 +6,7 @@ import { client, invalidateCache } from "../utils/redis.js";
 
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-
+  invalidateCache("/users");
   if (!name || !email || !password) {
     throw new BadRequestError("please provide all values");
   }
@@ -15,7 +15,7 @@ const registerUser = async (req, res) => {
     throw new BadRequestError("Email already in use");
   }
   const user = await User.create({ name, email, password });
-  invalidateCache("/api/v1/users");
+
   return res.status(StatusCodes.CREATED).json({
     user: {
       email: user.email,
@@ -43,14 +43,16 @@ const getAllUsers = async (req, res) => {
 
   const totalAdmins = await User.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalAdmins / limit);
-  client.set(
+  client.setEx(
     req.originalUrl,
+    120,
     JSON.stringify({ admins, totalAdmins, numOfPages })
   );
   res.status(StatusCodes.OK).json({ admins, totalAdmins, numOfPages });
 };
 
 const updateUser = async (req, res) => {
+  invalidateCache("/users");
   const { id: userId } = req.params;
   const { email, name } = req.body;
 
@@ -65,10 +67,11 @@ const updateUser = async (req, res) => {
   user.name = name;
 
   await user.save();
-  invalidateCache("/api/v1/users");
+
   res.status(StatusCodes.OK).json({ user, msg: "Success! User Updated" });
 };
 const deleteUser = async (req, res) => {
+  invalidateCache("/users");
   const { id: userId } = req.params;
 
   const user = await User.findOne({ _id: userId });
@@ -78,7 +81,7 @@ const deleteUser = async (req, res) => {
   }
 
   await user.remove();
-  invalidateCache("/api/v1/users");
+
   res.status(StatusCodes.OK).json({ msg: "Success! User removed" });
 };
 export { getAllUsers, updateUser, deleteUser, registerUser };

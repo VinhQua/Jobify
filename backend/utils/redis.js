@@ -27,10 +27,16 @@ const cacheMiddleware = async (req, res, next) => {
   }
 };
 // Common function for cache invalidation
-const invalidateCache = (cacheKey) => {
-  client.del(cacheKey, (err, response) => {
-    if (err) throw err;
-    console.log(`Cache key "${cacheKey}" invalidated`);
+const invalidateCache = async (cacheKey) => {
+  const allKeys = await client.keys("*");
+  console.log(allKeys);
+  allKeys.map((key) => {
+    if (key.includes(cacheKey)) {
+      client.del(key, (err, response) => {
+        if (err) throw err;
+        console.log(`Cache key "${key}" invalidated`);
+      });
+    }
   });
 };
 

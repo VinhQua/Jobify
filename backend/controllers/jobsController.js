@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 import moment from "moment";
 import Company from "../models/Company.js";
 import { uploadFileToGoogleCloud } from "../utils/google-cloud.js";
-import { client } from "../utils/redis.js";
+import { client, invalidateCache } from "../utils/redis.js";
 const createJob = async (req, res) => {
   const {
     company,
@@ -37,7 +37,7 @@ const createJob = async (req, res) => {
   req.body.createdBy = req.user.userId;
   req.body.company = companyId;
   const job = await Job.create(req.body);
-  invalidateCache("/api/v1/companies");
+  invalidateCache("/jobs");
   res.status(StatusCodes.CREATED).json({ job });
 };
 const getAllJobs = async (req, res) => {
@@ -96,13 +96,15 @@ const getAllJobs = async (req, res) => {
   const numOfPages = Math.ceil(totalJobs / limit);
 
   const companyList = companies.map((company) => company.name);
-  client.set(
+  client.setEx(
     req.originalUrl,
+    120,
     JSON.stringify({ jobs, totalJobs, numOfPages, companyList })
   );
   res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages, companyList });
 };
 const updateJob = async (req, res) => {
+  invalidateCache("/jobs");
   const { id: jobId } = req.params;
   const {
     company,
@@ -134,10 +136,11 @@ const updateJob = async (req, res) => {
     new: true,
     runValidators: true,
   });
-  invalidateCache("/api/v1/companies");
+
   res.status(StatusCodes.OK).json({ updatedJob });
 };
 const deleteJob = async (req, res) => {
+  invalidateCache("/jobs");
   const { id: jobId } = req.params;
 
   const job = await Job.findOne({ _id: jobId });
@@ -147,7 +150,7 @@ const deleteJob = async (req, res) => {
   }
 
   await job.remove();
-  invalidateCache("/api/v1/companies");
+
   res.status(StatusCodes.OK).json({ msg: "Success! Job removed" });
 };
 const showStats = async (req, res) => {

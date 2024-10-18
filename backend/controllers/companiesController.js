@@ -13,6 +13,8 @@ import Company from "../models/Company.js";
 import { client, invalidateCache } from "../utils/redis.js";
 
 const createCompany = async (req, res) => {
+  invalidateCache("/companies");
+  invalidateCache("/jobs");
   const { logo, name } = req.body;
 
   if (!logo || !name) {
@@ -20,15 +22,13 @@ const createCompany = async (req, res) => {
   }
   req.body.createdBy = req.user.userId;
   const company = await Company.create(req.body);
-  invalidateCache("/api/v1/companies");
+
   res.status(StatusCodes.CREATED).json({ company });
 };
 const getAllCompanies = async (req, res) => {
   const { sort, search } = req.query;
 
-  const queryObject = {
-    createdBy: req.user.userId,
-  };
+  const queryObject = {};
   // add stuff based on condition
 
   if (search) {
@@ -66,13 +66,16 @@ const getAllCompanies = async (req, res) => {
 
   const totalCompanies = await Company.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalCompanies / limit);
-  client.set(
+  client.setEx(
     req.originalUrl,
+    120,
     JSON.stringify({ companies, totalCompanies, numOfPages })
   );
   res.status(StatusCodes.OK).json({ companies, totalCompanies, numOfPages });
 };
 const updateCompany = async (req, res) => {
+  invalidateCache("/companies");
+  invalidateCache("/jobs");
   const { id: companyId } = req.params;
   const { name } = req.body;
 
@@ -94,10 +97,11 @@ const updateCompany = async (req, res) => {
       runValidators: true,
     }
   );
-  invalidateCache("/api/v1/companies");
+
   res.status(StatusCodes.OK).json({ updatedCompany });
 };
 const deleteCompany = async (req, res) => {
+  invalidateCache("/companies");
   const { id: companyId } = req.params;
 
   const company = await Company.findOne({ _id: companyId });
@@ -107,7 +111,7 @@ const deleteCompany = async (req, res) => {
   }
 
   await company.remove();
-  invalidateCache("/api/v1/companies");
+
   res.status(StatusCodes.OK).json({ msg: "Success! Company removed" });
 };
 const uploadLogo = async (req, res) => {

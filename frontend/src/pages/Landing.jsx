@@ -17,9 +17,13 @@ const Landing = () => {
             job <span>tracking</span> app
           </h1>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Incidunt
-            adipisci sint numquam rerum fugiat quia, laudantium facilis modi
-            suscipit aut.
+            Jobify is a web application that allows an admin to manage companies
+            and their respective job listings. The admin can log in, manage
+            users, add, update, delete, and view companies and jobs. The
+            application will feature role-based authentication, AIpowered
+            features, robust pagination, advanced filtering, sorting, and state
+            management with Redux, all developed using the MERN stack (MongoDB,
+            Express.js, React, and Node.js).
           </p>
 
           <Link to="/register" className="btn btn-hero">
