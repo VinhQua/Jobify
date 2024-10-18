@@ -10,6 +10,7 @@ import checkPermissions from "../utils/checkPermissions.js";
 import mongoose from "mongoose";
 import moment from "moment";
 import Company from "../models/Company.js";
+import { client, invalidateCache } from "../utils/redis.js";
 
 const createCompany = async (req, res) => {
   const { logo, name } = req.body;
@@ -19,6 +20,7 @@ const createCompany = async (req, res) => {
   }
   req.body.createdBy = req.user.userId;
   const company = await Company.create(req.body);
+  invalidateCache("/api/v1/companies");
   res.status(StatusCodes.CREATED).json({ company });
 };
 const getAllCompanies = async (req, res) => {
@@ -64,7 +66,10 @@ const getAllCompanies = async (req, res) => {
 
   const totalCompanies = await Company.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalCompanies / limit);
-
+  client.set(
+    req.originalUrl,
+    JSON.stringify({ companies, totalCompanies, numOfPages })
+  );
   res.status(StatusCodes.OK).json({ companies, totalCompanies, numOfPages });
 };
 const updateCompany = async (req, res) => {
@@ -81,8 +86,6 @@ const updateCompany = async (req, res) => {
   }
   // check permissions
 
-  checkPermissions(req.user, company.createdBy);
-
   const updatedCompany = await Company.findOneAndUpdate(
     { _id: companyId },
     req.body,
@@ -91,7 +94,7 @@ const updateCompany = async (req, res) => {
       runValidators: true,
     }
   );
-
+  invalidateCache("/api/v1/companies");
   res.status(StatusCodes.OK).json({ updatedCompany });
 };
 const deleteCompany = async (req, res) => {
@@ -103,10 +106,8 @@ const deleteCompany = async (req, res) => {
     throw new NotFoundError(`No company with id :${company}`);
   }
 
-  checkPermissions(req.user, company.createdBy);
-
   await company.remove();
-
+  invalidateCache("/api/v1/companies");
   res.status(StatusCodes.OK).json({ msg: "Success! Company removed" });
 };
 const uploadLogo = async (req, res) => {

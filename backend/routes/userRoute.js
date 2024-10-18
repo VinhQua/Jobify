@@ -7,8 +7,9 @@ import {
   registerUser,
   updateUser,
 } from "../controllers/userController.js";
+import { cacheMiddleware } from "../utils/redis.js";
 
-router.route("/").post(registerUser).get(getAllUsers);
+router.route("/").post(registerUser).get(cacheMiddleware, getAllUsers);
 
 // remember about :id
 
