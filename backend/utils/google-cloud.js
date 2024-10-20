@@ -7,7 +7,9 @@ import util, { format } from "util";
 
 let processFile = Multer({
   storage: Multer.memoryStorage(),
-  limits: 2 * 1024 * 1024,
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
 }).single("file");
 let processFileMiddleware = util.promisify(processFile);
 const storage = new Storage({
@@ -46,9 +48,11 @@ const uploadFileToGoogleCloud = async (req, res) => {
     blobStream.end(req.file.buffer);
   } catch (error) {
     if (error.code == "LIMIT_FILE_SIZE") {
-      res.status(500).json({ msg: `File size cannot be larger than 2MB!` });
+      return res
+        .status(500)
+        .json({ msg: `File size cannot be larger than 2MB!` });
     }
-    res
+    return res
       .status(500)
       .json({ msg: `Could not upload the file: ${req.file.originalname}` });
   }

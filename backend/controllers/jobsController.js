@@ -94,14 +94,24 @@ const getAllJobs = async (req, res) => {
 
   const totalJobs = await Job.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalJobs / limit);
-
+  const searchSuggestions = (await Job.find()).map(
+    (job) => new Object({ id: job._id, name: job.jobPosition })
+  );
   const companyList = companies.map((company) => company.name);
   client.setEx(
     req.originalUrl,
     120,
-    JSON.stringify({ jobs, totalJobs, numOfPages, companyList })
+    JSON.stringify({
+      searchSuggestions,
+      jobs,
+      totalJobs,
+      numOfPages,
+      companyList,
+    })
   );
-  res.status(StatusCodes.OK).json({ jobs, totalJobs, numOfPages, companyList });
+  res
+    .status(StatusCodes.OK)
+    .json({ searchSuggestions, jobs, totalJobs, numOfPages, companyList });
 };
 const updateJob = async (req, res) => {
   invalidateCache("/jobs");

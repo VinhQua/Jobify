@@ -12,6 +12,7 @@ const initialFiltersState = {
   searchType: "all",
   sort: "latest",
   sortOptions: ["latest", "oldest", "a-z", "z-a"],
+  searchSuggestions: [],
 };
 
 const initialState = {
@@ -60,8 +61,7 @@ const allJobsSlice = createSlice({
         state.jobs = payload.jobs;
         state.numOfPages = payload.numOfPages;
         state.totalJobs = payload.totalJobs;
-        console.log(payload);
-
+        state.searchSuggestions = payload.searchSuggestions;
         state.companyList = payload.companyList;
       })
       .addCase(getAllJobs.rejected, (state, { payload }) => {

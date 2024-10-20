@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Wrapper from "../assets/wrappers/SearchContainer";
-import FormRow from "./FormRow";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
 import FormSelect from "./FormSelect";
 import {
   clearJobFilters,
@@ -19,6 +19,7 @@ const SearchContainer = () => {
     sort,
     sortOptions,
     companyList,
+    searchSuggestions,
   } = useSelector((store) => store.allJobs);
   const { jobTypeOptions } = useSelector((store) => store.job);
   const dispatch = useDispatch();
@@ -38,17 +39,56 @@ const SearchContainer = () => {
       clearTimeout(timeId);
     };
   }, [localSearch]);
+  const formatResult = (item) => {
+    return (
+      <>
+        <span style={{ display: "block", textAlign: "left" }}>{item.name}</span>
+      </>
+    );
+  };
+  const handleOnSearch = (string, results) => {
+    // onSearch will have as the first callback parameter
+    // the string searched and for the second the results.
+    console.log(string, results);
+    // setLocalSearch(string);
+  };
+
+  const handleOnHover = (result) => {
+    // the item hovered
+    console.log(result);
+  };
+
+  const handleOnSelect = (item) => {
+    // the item selected
+    setLocalSearch(item.name);
+    console.log(item);
+  };
   return (
     <Wrapper>
       <div className="form">
         <h4>Search Form</h4>
         <div className="form-center">
-          <FormRow
+          <div>
+            <label htmlFor="" className="form-label">
+              search
+            </label>
+            <ReactSearchAutocomplete
+              items={searchSuggestions}
+              onSearch={handleOnSearch}
+              onHover={handleOnHover}
+              onSelect={handleOnSelect}
+              // onFocus={handleOnFocus}
+              autoFocus
+              formatResult={formatResult}
+            />
+          </div>
+
+          {/* <FormRow
             name="search"
             type="text"
             value={localSearch}
             handleChange={(e) => setLocalSearch(e.target.value)}
-          />
+          /> */}
           <FormRange
             name="salary"
             type="range"
