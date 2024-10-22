@@ -75,10 +75,10 @@ const getAllJobs = async (req, res) => {
     result = result.sort("createdAt");
   }
   if (sort === "a-z") {
-    result = result.sort("position");
+    result = result.sort("jobPosition");
   }
   if (sort === "z-a") {
-    result = result.sort("-position");
+    result = result.sort("-jobPosition");
   }
 
   //
