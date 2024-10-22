@@ -77,6 +77,7 @@ const SearchContainer = () => {
               onSearch={handleOnSearch}
               onHover={handleOnHover}
               onSelect={handleOnSelect}
+              onClear={() => setLocalSearch("")}
               // onFocus={handleOnFocus}
               autoFocus
               formatResult={formatResult}

@@ -2,7 +2,7 @@ import React from "react";
 import Wrapper from "../assets/wrappers/PageBtnContainer";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { changePage } from "../features/allJobs/allJobsSlice";
+import { changePage } from "../features/allCompanies/allCompaniesSlice";
 const CompaniesPagination = () => {
   const { page, numOfPages } = useSelector((store) => store.allCompanies);
   const dispatch = useDispatch();

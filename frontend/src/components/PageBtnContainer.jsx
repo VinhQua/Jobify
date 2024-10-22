@@ -21,7 +21,7 @@ const PageBtnContainer = () => {
     }
     dispatch(changePage(newPage));
   };
-
+  const numOfPagesToShow = 2;
   return (
     <Wrapper>
       <button type="button" className="prev-btn" onClick={handlePrev}>
@@ -29,17 +29,72 @@ const PageBtnContainer = () => {
         prev
       </button>
       <div className="btn-container">
-        {pages.map((pageNumber) => (
+        <button
+          type="button"
+          key={1}
+          className={1 === page ? "pageBtn active" : "pageBtn"}
+          onClick={() => dispatch(changePage(1))}
+        >
+          {1}
+        </button>
+        {page > numOfPagesToShow && (
+          <button type="button" className="pageBtn">
+            ...
+          </button>
+        )}
+        {pages.map((pageNumber) => {
+          if (
+            pageNumber === page &&
+            pageNumber > 1 &&
+            pageNumber < pages.length
+          ) {
+            return (
+              <button
+                type="button"
+                key={pageNumber}
+                className={pageNumber === page ? "pageBtn active" : "pageBtn"}
+                onClick={() => dispatch(changePage(pageNumber))}
+              >
+                {pageNumber}
+              </button>
+            );
+          } else if (
+            (pageNumber >= page - numOfPagesToShow &&
+              pageNumber < page &&
+              pageNumber > 1) ||
+            (pageNumber <= page + numOfPagesToShow &&
+              pageNumber > page &&
+              pageNumber < pages.length)
+          ) {
+            return (
+              <button
+                type="button"
+                key={pageNumber}
+                className={pageNumber === page ? "pageBtn active" : "pageBtn"}
+                onClick={() => dispatch(changePage(pageNumber))}
+              >
+                {pageNumber}
+              </button>
+            );
+          }
+        })}
+        {page < pages.length - numOfPagesToShow && (
+          <button type="button" className="pageBtn">
+            ...
+          </button>
+        )}
+        {pages.length > 2 && (
           <button
             type="button"
-            key={pageNumber}
-            className={pageNumber === page ? "pageBtn active" : "pageBtn"}
-            onClick={() => dispatch(changePage(pageNumber))}
+            key={pages.length}
+            className={pages.length === page ? "pageBtn active" : "pageBtn"}
+            onClick={() => dispatch(changePage(pages.length))}
           >
-            {pageNumber}
+            {pages.length}
           </button>
-        ))}
+        )}
       </div>
+
       <button type="button" className="next-btn" onClick={handleNext}>
         next
         <HiChevronDoubleRight />

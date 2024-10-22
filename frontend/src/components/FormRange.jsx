@@ -15,7 +15,7 @@ const FormRange = ({ label, name, value }) => {
     return () => {
       clearTimeout(timeId);
     };
-  });
+  }, [selectedPrice]);
   return (
     <div className="form-row">
       <label htmlFor={name} className="form-label ">
