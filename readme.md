@@ -55,12 +55,16 @@ Node.js).
 - Implement secure, role-based access using JWT with role distinction between
   admin and super-admin. - Super-admins can manage admin accounts; admins can manage companies and
   jobs.
-  **_2. Advanced Filtering and Search_**
+
+**_2. Advanced Filtering and Search_**
+
 - Implement filtering for job listings by various criteria (type, salary,
   company, sort).
 - Provide search functionality with intelligent text input suggestions for jobs and
   companies.
-  **_3. AI-Powered Job Descriptions and Outreach Messages_**
+
+**_3. AI-Powered Job Descriptions and Outreach Messages_**
+
 - Use an AI service (e.g., GroqCloud) to auto-generate job descriptions or outreach
   messages based on user input.
 - Allow the admin to click a button to generate a description or email template when
@@ -71,7 +75,9 @@ Node.js).
 - Implement efficient pagination with optimized MongoDB queries and lazy loading
   for job and company lists to ensure scalability.
 - Use Redis to cache frequently accessed data for improved performance.
-  **_5. File Uploads_**
+
+**_5. File Uploads_**
+
 - Implement file upload functionality for adding company logos and job description
   PDFs, utilizing a cloud-based file storage solution (e.g., Google Cloud). - Validate file types and sizes both on the client and server side for security and
   performance.
