@@ -94,8 +94,9 @@ const getAllJobs = async (req, res) => {
 
   const totalJobs = await Job.countDocuments(queryObject);
   const numOfPages = Math.ceil(totalJobs / limit);
-  const searchSuggestions = (await Job.find()).map(
-    (job) => new Object({ id: job._id, name: job.jobPosition })
+  let searchSuggestions = (await Job.find()).map((job) => job.jobPosition);
+  searchSuggestions = [...new Set(searchSuggestions)].map(
+    (job) => new Object({ id: job, name: job })
   );
   const companyList = companies.map((company) => company.name);
   client.setEx(

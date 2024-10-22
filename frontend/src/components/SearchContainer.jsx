@@ -119,7 +119,10 @@ const SearchContainer = () => {
           <button
             type="button"
             className="btn btn-block btn-danger"
-            onClick={() => dispatch(clearJobFilters())}
+            onClick={() => {
+              setLocalSearch("");
+              dispatch(clearJobFilters());
+            }}
           >
             clear filters
           </button>
